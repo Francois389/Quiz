@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur de Quiz JSON</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Générateur de questionnaire</h1>
+      <p class="subtitle">Crée un fichier JSON compatible avec l'application Quiz</p>
+      <button id="download-apk" class="btn btn-secondary btn-download-apk">
+        Télécharger l'application (APK)
+      </button>
+    </header>
+
+    <section class="card">
+      <div class="field">
+        <label for="titre">Titre</label>
+        <input type="text" id="titre" placeholder="Ex: Culture générale">
+      </div>
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" rows="2" placeholder="Description courte du questionnaire"></textarea>
+      </div>
+    </section>
+
+    <section id="questions-container"></section>
+
+    <button id="add-question" class="btn btn-primary">Ajouter une question</button>
+
+    <section class="actions">
+      <button id="import-json" class="btn btn-secondary">Importer un JSON</button>
+      <input type="file" id="file-input" accept="application/json" hidden>
+      <button id="export-json" class="btn btn-success">Exporter en JSON</button>
+      <button id="preview-json" class="btn btn-secondary">Aperçu JSON</button>
+    </section>
+
+    <section id="preview-container" class="card hidden">
+      <div class="preview-header">
+        <h2>Aperçu</h2>
+        <button id="close-preview" class="btn btn-icon">✕</button>
+      </div>
+      <pre id="json-preview"></pre>
+    </section>
+
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <template id="question-template">
+    <div class="card question-card">
+      <div class="question-header">
+        <span class="question-number"></span>
+        <button class="btn btn-icon btn-remove" title="Supprimer la question">✕</button>
+      </div>
+      <div class="field">
+        <label>Question</label>
+        <input type="text" class="q-text" placeholder="Intitulé de la question">
+      </div>
+      <div class="field">
+        <label>Bonne réponse</label>
+        <input type="text" class="q-good" placeholder="Réponse correcte">
+      </div>
+      <div class="field">
+        <label>Mauvaises réponses (3)</label>
+        <div class="wrong-answers"></div>
+      </div>
+    </div>
+  </template>
+
+  <template id="wrong-answer-template">
+    <div class="wrong-answer-row">
+      <input type="text" class="q-wrong" placeholder="Mauvaise réponse">
+    </div>
+  </template>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

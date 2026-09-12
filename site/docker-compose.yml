@@ -1,0 +1,9 @@
+services:
+  quiz-json-builder:
+    build: .
+    container_name: quiz-json-builder
+    ports:
+      - "8080:80"
+    environment:
+      - REPO_URL=https://github.com/<owner>/<repo>
+    restart: unless-stopped
