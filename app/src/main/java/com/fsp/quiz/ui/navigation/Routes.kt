@@ -8,11 +8,11 @@ sealed class Routes(val route: String) {
         fun avec(quizId: Long) = "detail/$quizId"
     }
 
-    object Jeu : Routes("jeu/{quizId}") {
-        fun avec(quizId: Long) = "jeu/$quizId"
+    /** Sous-graphe englobant Jeu + Résultats : ils partagent la même instance de JeuViewModel. */
+    object Session : Routes("session/{quizId}") {
+        fun avec(quizId: Long) = "session/$quizId"
     }
 
-    object Resultats : Routes("resultats/{quizId}/{score}/{total}") {
-        fun avec(quizId: Long, score: Int, total: Int) = "resultats/$quizId/$score/$total"
-    }
+    object Jeu : Routes("session/{quizId}/jeu")
+    object Resultats : Routes("session/{quizId}/resultats")
 }

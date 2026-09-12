@@ -1,25 +1,52 @@
 package com.fsp.quiz.ui.screens.settings
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fsp.quiz.data.settings.ModeChrono
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReglagesScreen(
-    onRetour: () -> Unit
-    // TODO: injecter SettingsRepository / ViewModel pour lire-écrire les vraies valeurs
+    onRetour: () -> Unit,
+    viewModel: ReglagesViewModel = viewModel(
+        factory = ReglagesViewModel.Factory(
+            LocalContext.current.applicationContext as android.app.Application
+        )
+    )
 ) {
-    var afficherReponseImmediate by remember { mutableStateOf(true) }
-    var modeChrono by remember { mutableStateOf(ModeChrono.AUCUN) }
-    var dureeSecondes by remember { mutableStateOf("30") }
+    val settings by viewModel.settings.collectAsState()
+    var dureeTexte by remember(settings.dureeSecondes) { mutableStateOf(settings.dureeSecondes.toString()) }
 
     Scaffold(
         topBar = {
@@ -47,8 +74,8 @@ fun ReglagesScreen(
             ) {
                 Text("Afficher la réponse immédiatement")
                 Switch(
-                    checked = afficherReponseImmediate,
-                    onCheckedChange = { afficherReponseImmediate = it }
+                    checked = settings.afficherReponseImmediate,
+                    onCheckedChange = { viewModel.setAfficherReponseImmediate(it) }
                 )
             }
 
@@ -61,21 +88,27 @@ fun ReglagesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .selectable(
-                                selected = modeChrono == mode,
-                                onClick = { modeChrono = mode }
+                                selected = settings.modeChrono == mode,
+                                onClick = { viewModel.setModeChrono(mode) }
                             )
                     ) {
-                        RadioButton(selected = modeChrono == mode, onClick = { modeChrono = mode })
+                        RadioButton(
+                            selected = settings.modeChrono == mode,
+                            onClick = { viewModel.setModeChrono(mode) }
+                        )
                         Spacer(Modifier.width(8.dp))
                         Text(libelleMode(mode))
                     }
                 }
             }
 
-            if (modeChrono != ModeChrono.AUCUN) {
+            if (settings.modeChrono != ModeChrono.AUCUN) {
                 OutlinedTextField(
-                    value = dureeSecondes,
-                    onValueChange = { dureeSecondes = it.filter { c -> c.isDigit() } },
+                    value = dureeTexte,
+                    onValueChange = { saisie ->
+                        dureeTexte = saisie.filter { c -> c.isDigit() }
+                        dureeTexte.toIntOrNull()?.let { viewModel.setDureeSecondes(it) }
+                    },
                     label = { Text("Durée (secondes)") },
                     supportingText = { Text("Une durée minimale sera imposée selon le nombre de questions.") },
                     modifier = Modifier.fillMaxWidth()

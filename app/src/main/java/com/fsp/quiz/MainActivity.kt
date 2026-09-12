@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.fsp.quiz.ui.navigation.NavGraph
+import com.fsp.quiz.ui.navigation.QuizNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +25,7 @@ fun QuizAppRoot() {
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             val navController = rememberNavController()
-            NavGraph(navController = navController)
+            QuizNavGraph(navController = navController)
         }
     }
 }

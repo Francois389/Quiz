@@ -40,9 +40,9 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
     // Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.icons.core)
@@ -52,6 +52,16 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    // DataStore (réglages globaux)
+    implementation(libs.androidx.datastore.preferences)
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
 
@@ -63,17 +73,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
 
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
 
-    // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
-    // DataStore (réglages globaux)
-    implementation(libs.androidx.datastore.preferences)
-
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.konfetti)
 }
