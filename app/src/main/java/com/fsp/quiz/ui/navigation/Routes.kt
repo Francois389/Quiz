@@ -13,6 +13,11 @@ sealed class Routes(val route: String) {
         fun avec(quizId: Long) = "session/$quizId"
     }
 
-    object Jeu : Routes("session/{quizId}/jeu")
-    object Resultats : Routes("session/{quizId}/resultats")
+    object Jeu : Routes("session/{quizId}/jeu") {
+        fun avec(quizId: Long) = "session/$quizId/jeu"
+    }
+
+    object Resultats : Routes("session/{quizId}/resultats") {
+        fun avec(quizId: Long) = "session/$quizId/resultats"
+    }
 }

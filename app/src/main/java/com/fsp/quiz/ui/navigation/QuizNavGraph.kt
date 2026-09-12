@@ -54,10 +54,10 @@ fun QuizNavGraph(navController: NavHostController) {
             arguments = listOf(navArgument("quizId") { type = NavType.LongType })
         ) {
             composable(Routes.Jeu.route) { backStackEntry ->
-                val quizId = backStackEntry.arguments?.getLong("quizId") ?: 0L
                 val sessionEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(Routes.Session.avec(quizId))
+                    navController.getBackStackEntry(Routes.Session.route)
                 }
+                val quizId = sessionEntry.arguments?.getLong("quizId") ?: return@composable
                 val jeuViewModel: JeuViewModel = viewModel(
                     sessionEntry,
                     factory = JeuViewModel.Factory(
@@ -68,7 +68,7 @@ fun QuizNavGraph(navController: NavHostController) {
                 JeuScreen(
                     viewModel = jeuViewModel,
                     onTermine = {
-                        navController.navigate(Routes.Resultats.route) {
+                        navController.navigate(Routes.Resultats.avec(quizId)) {
                             popUpTo(Routes.Jeu.route) { inclusive = true }
                         }
                     }
@@ -76,10 +76,10 @@ fun QuizNavGraph(navController: NavHostController) {
             }
 
             composable(Routes.Resultats.route) { backStackEntry ->
-                val quizId = backStackEntry.arguments?.getLong("quizId") ?: 0L
                 val sessionEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(Routes.Session.avec(quizId))
+                    navController.getBackStackEntry(Routes.Session.route)
                 }
+                val quizId = sessionEntry.arguments?.getLong("quizId") ?: 0L
                 val jeuViewModel: JeuViewModel = viewModel(
                     sessionEntry,
                     factory = JeuViewModel.Factory(

@@ -24,47 +24,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fsp.quiz.ui.screens.game.JeuViewModel
-import nl.dionsegijn.konfetti.core.Party
-import nl.dionsegijn.konfetti.core.emitter.Emitter
-import java.util.concurrent.TimeUnit
 
 data class RevisionQuestion(
     val texte: String,
     val reponseDonnee: String?,
     val bonneReponse: String,
     val correcte: Boolean
-) {
-
-}
-
-enum class ResultatStatut {
-    EXCELLENT,
-    BON,
-    MOYEN,
-    UNE_CORRECTE,
-    MAUVAIS,
-    FAUSSE;
-    companion object {
-        fun calculer(resultas: List<RevisionQuestion>): ResultatStatut {
-            val correctCount = resultas.count { it.correcte }
-            val total = resultas.size
-            val pourcentageCorrect = (correctCount.toFloat() / total.toFloat()) * 100
-            return when {
-                correctCount == total -> EXCELLENT
-                correctCount == 1 -> UNE_CORRECTE
-                pourcentageCorrect >= 50 -> BON
-                pourcentageCorrect >= 25 -> MOYEN
-                correctCount == 0 -> FAUSSE
-                else -> MAUVAIS
-            }
-        }
-    }
-}
+)
 
 
 /**
@@ -80,19 +50,6 @@ fun ResultatsScreen(
     val score = jeuViewModel.calculerScore()
     val total = jeuViewModel.uiState.collectAsState().value.totalQuestions
     val revision = jeuViewModel.construireRevision()
-
-    LaunchedEffect(revision) {
-        val status = ResultatStatut.calculer(revision)
-        when(status) {
-            ResultatStatut.EXCELLENT -> Party(
-                emitter = Emitter(
-                    duration = 5,
-                    timeUnit = TimeUnit.SECONDS
-                ).max(1)
-            )
-            else -> Unit
-        }
-    }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Résultats") }) }
